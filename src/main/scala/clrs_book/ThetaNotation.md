@@ -1,4 +1,5 @@
-###Log:
+##Maths Formulas:
+#####Log:
 ```
 log (base 10) 1    = 0  [log (base 10) 10^0]
 log (base 10) 10   = 1  [log (base 10) 10^1]
@@ -28,12 +29,16 @@ log x = n
 
 ```
 
-###Comaparison:
+#####Summetion of N: `1+ 2+ ... + n = n(n+1) / 2`
+
+
+###Notations:
+#####Comaparison:
 ![](img/CompareTimes.png)
 
 
 
-### [Theta] Θ-Notation:
+##### [Theta] Θ-Notation:
 ```
 Θ(g(n)) = f(n) 
           : 0 􏰎 <= c1*g(n) 􏰎 <= f(n) 􏰎 <= c2*g(n) 
@@ -42,7 +47,7 @@ log x = n
 > For point n >= n0, f(n) is always in **BETWEEN** c1*g(n) and c2*g(n).
 
 
-### [Big-Oh/Oh] O-Notation:
+##### [Big-Oh/Oh] O-Notation:
 ```
 O(g(n)) = f(n) 
           : 0 􏰎 <= f(n) 􏰎 <= c*g(n) 
@@ -50,7 +55,7 @@ O(g(n)) = f(n)
 ```
 > For point n >= n0, f(n) is always on or **BELOW** c*g(n).
 
-### [Omega] Ω-Notation:
+##### [Omega] Ω-Notation:
 ```
 Ω(g(n)) = f(n) 
           : 0 􏰎 <= c*g(n)  <= f(n) 

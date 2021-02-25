@@ -1,7 +1,5 @@
 package clrs_book
 
-import clrs_book.SumOnBinaryArrayStoredInt.curry
-
 object SumOnBinaryArrayStoredInt extends App {
 
   // 7
@@ -45,7 +43,10 @@ object SumOnBinaryArrayStoredInt extends App {
 
   n3(0) = curry
 
-  println(n3.toIterable)
+  //If Fixed Bits:
+  //if (curry == 1) throw new UnsupportedOperationException("Number Overflow")
+
+  println("Final: " + n3.toIterable)
 
 
   lazy val add: (Int, Int, Int) => (Int, Int) = (b1, b2, curry) =>
