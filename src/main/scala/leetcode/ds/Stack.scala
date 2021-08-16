@@ -26,7 +26,6 @@ object Node {
 }
 
 object Stack extends App {
-
   {
     var sol = findTargetSumWays(nums = Array(1, 1, 1, 1, 1), target = 3)
     println(sol)
@@ -35,13 +34,53 @@ object Stack extends App {
     sol = findTargetSumWays(nums = Array(1), target = 1)
     println(sol)
     assert(sol == 1)
+
+    sol = findTargetSumWays(nums = Array(1, 2, 1), target = 0)
+    println(sol)
+    assert(sol == 2)
+
+    sol = findTargetSumWays(nums = Array(10, 34, 28, 5, 10, 26, 9, 17, 28, 10, 9, 6, 10, 15, 0, 28, 42, 39, 25, 19),
+      target = 26)
+    println(sol)
+    assert(sol == 8034)
   }
 
   //all possible ways with + - to achieve target
   def findTargetSumWays(nums: Array[Int], target: Int): Int = {
+    var count = 0
 
+    def loop(index: Int, acc: Int): Unit = {
+      if (index >= nums.length) {
+        if (acc == target) count = count + 1
+        if (acc == (target * (-1))) count = count + 1
+      }
+      else {
+        loop(index + 1, acc + nums(index))
+        loop(index + 1, ((-1) * acc) + nums(index))
+      }
+    }
+
+    loop(1, nums(0))
+    count
   }
 
+  def findTargetSumWays_MemoryExceeds(nums: Array[Int], target: Int): Int = {
+
+    def loop(index: Int,
+             acc: List[ArrayBuffer[Int]]): List[ArrayBuffer[Int]] = {
+
+      if (index < nums.length) {
+        loop(index + 1,
+          acc.map(l => l.+:(nums(index))) ++ acc.map(l => l.+:(nums(index) * (-1))))
+      }
+      else acc
+    }
+
+    def eval(n: ArrayBuffer[Int]) = n.sum == target
+
+    val all = loop(0, List(new ArrayBuffer[Int]()))
+    all.map(eval).filter(b => b).size
+  }
 
   {
     val node1 = Node(1)
@@ -76,15 +115,14 @@ object Stack extends App {
       queue.enqueue(graph)
       while (queue.nonEmpty) {
         val curr = queue.dequeue()
-        clonedNode(curr, () => {}).neighbors =
+        clonedNode(curr, () => {
+        }).neighbors =
           curr.neighbors.map(ne => clonedNode(ne, () => queue.enqueue(ne)))
       }
 
       map(graph.value)
     }
   }
-
-
   {
     var tokens = Array("2", "1", "+", "3", "*")
     var solution = evalRPN(tokens)
@@ -115,19 +153,18 @@ object Stack extends App {
       }
 
     val stack = new mutable.Stack[Int]()
-    tokens.foreach { t =>
-      if (isOp(t)) {
-        val r = stack.pop()
-        val l = stack.pop()
-        stack.push(eval(l, r, t))
-      } else {
-        stack.push(t.toInt)
-      }
+    tokens.foreach {
+      t =>
+        if (isOp(t)) {
+          val r = stack.pop()
+          val l = stack.pop()
+          stack.push(eval(l, r, t))
+        } else {
+          stack.push(t.toInt)
+        }
     }
     stack.pop()
   }
-
-
   {
     var temperatures = Array(1, 3, 5, 9, 7, 8, 2, 4)
     var solution: Array[Int] = dailyTemperatures(temperatures)
@@ -173,12 +210,13 @@ object Stack extends App {
     val solution = new ArrayBuffer[Int](temperatures.length)
     (0 until temperatures.length).foreach(_ => solution.append(0))
 
-    (0 until temperatures.length).foreach { i =>
-      while (stack.nonEmpty && temperatures(stack.top) < temperatures(i)) {
-        solution(stack.top) = (i - stack.top)
-        stack.pop()
-      }
-      stack.push(i)
+    (0 until temperatures.length).foreach {
+      i =>
+        while (stack.nonEmpty && temperatures(stack.top) < temperatures(i)) {
+          solution(stack.top) = (i - stack.top)
+          stack.pop()
+        }
+        stack.push(i)
     }
     solution.toArray
   }
@@ -187,42 +225,43 @@ object Stack extends App {
     val stack = new mutable.Queue[Int]()
 
     var lastAns: Int = 0
-    (0 until temperatures.length).map { i =>
+    (0 until temperatures.length).map {
+      i =>
 
-      if (i > 0 && temperatures(i) == temperatures(i - 1)) {
-        lastAns = lastAns - 1
-        lastAns
-      } else if (stack.nonEmpty) {
-        println(temperatures(i) + " " + stack)
-        val count = stack.size
-        stack.dequeue
-        lastAns = count
-        count
-      }
-      else {
-        var last: Int = 0
-        var count = 0
-        (i + 1 until temperatures.length).find(j => {
+        if (i > 0 && temperatures(i) == temperatures(i - 1)) {
+          lastAns = lastAns - 1
+          lastAns
+        } else if (stack.nonEmpty) {
+          println(temperatures(i) + " " + stack)
+          val count = stack.size
+          stack.dequeue
+          lastAns = count
+          count
+        }
+        else {
+          var last: Int = 0
+          var count = 0
+          (i + 1 until temperatures.length).find(j => {
 
-          if (j == i + 1) last = temperatures(j)
-          else if (temperatures(j) > last) {
-            stack.enqueue(temperatures(j))
-            last = temperatures(j)
-          }
-          else last = Int.MaxValue
+            if (j == i + 1) last = temperatures(j)
+            else if (temperatures(j) > last) {
+              stack.enqueue(temperatures(j))
+              last = temperatures(j)
+            }
+            else last = Int.MaxValue
 
-          count = count + 1
-          temperatures(j) > temperatures(i)
-        })
-          .map(_ => {
-            println(count)
-            lastAns = count
-            count
-          }).getOrElse({
-          lastAns = 0
-          0
-        })
-      }
+            count = count + 1
+            temperatures(j) > temperatures(i)
+          })
+            .map(_ => {
+              println(count)
+              lastAns = count
+              count
+            }).getOrElse({
+            lastAns = 0
+            0
+          })
+        }
     }.toArray
   }
 

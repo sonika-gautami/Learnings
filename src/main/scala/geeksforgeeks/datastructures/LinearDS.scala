@@ -1,8 +1,6 @@
 package geeksforgeeks.datastructures
 
-import org.apache.spark.util.SizeEstimator
-
-//import com.madhukaraphatak.sizeof.SizeEstimator
+import com.madhukaraphatak.sizeof.SizeEstimator
 
 object LinearDS extends App {
 

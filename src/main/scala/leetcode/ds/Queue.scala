@@ -5,8 +5,8 @@ import scala.collection.mutable
 
 object Queue extends App {
 
-  println("PerfectSquare: " + numSquares(12))
   println("PerfectSquare: " + numSquares(13))
+  println("PerfectSquare: " + numSquares(12))
   println("PerfectSquare: " + numSquares(1))
   println("PerfectSquare: " + numSquares(48))
   println("PerfectSquare: " + numSquares(49 * 2))
