@@ -1,5 +1,7 @@
 package leetcode.ds
 
+import scala.collection.immutable
+
 
 class ListNode(_x: Int = 0, _next: ListNode = null) {
   var next: ListNode = _next
@@ -18,16 +20,115 @@ class TreeNodeR(_value: Int = 0, _left: TreeNodeR = null, _right: TreeNodeR = nu
 
 object Recursion extends App {
 
+  println(generateTrees(3).size)
+  println(generateTrees(1).size)
+  println(generateTrees(4).size)
+  println(generateTrees(8).size)
+
+  //structurally unique BST
+  def generateTrees(n: Int): List[TreeNodeR] = {
+
+    def subTree(start: Int, end: Int): List[TreeNodeR] = {
+      if (start > end) Nil
+      else {
+        val nodes =
+          start to end flatMap { curr =>
+            val allLeft = subTree(start, curr - 1)
+            val allRight = subTree(curr + 1, end)
+
+            if (allLeft.isEmpty && allRight.isEmpty) {
+              List(new TreeNodeR(curr))
+            } else if (allLeft.isEmpty) {
+              allRight.map(r => new TreeNodeR(curr, _right = r))
+            } else if (allRight.isEmpty) {
+              allLeft.map(l => new TreeNodeR(curr, _left = l))
+            } else {
+              allLeft.flatMap(l =>
+                allRight.map(r => new TreeNodeR(curr, l, r)))
+            }
+          }
+        nodes.toList
+      }
+    }
+
+    subTree(1, n)
+  }
+
+  /*def generateTrees(n: Int): List[TreeNode] = {
+
+    def allLeft(currN: Int, prev: TreeNodeR = null): TreeNodeR = {
+      if (currN > n) prev
+      else {
+        val node = new TreeNodeR(currN)
+        node.left = prev
+        allLeft(currN + 1, node)
+      }
+    }
+
+    def allRight(currN: Int): TreeNodeR = {
+      if (currN == n) new TreeNodeR(currN)
+      else {
+        val node = new TreeNodeR(currN)
+        node.left = allRight(currN + 1)
+        node
+      }
+    }
+
+    def loop(root: TreeNodeR, remainingN: Int): List[TreeNode] = {
+
+
+    }
+
+    if (n <= 0) Nil else loop(new TreeNodeR(1), 2)
+  }*/
+
   {
     val sol: Int = kthGrammar(n = 1, k = 1)
-    println(sol)
     assert(sol == 0)
     assert(kthGrammar(n = 2, k = 1) == 0)
     assert(kthGrammar(n = 2, k = 2) == 1)
     assert(kthGrammar(n = 3, k = 1) == 0)
+    println("------")
+    assert(kthGrammar(n = 3, k = 4) == 0)
+    assert(kthGrammar(n = 5, k = 15) == 1)
+    assert(kthGrammar(n = 5, k = 16) == 0)
+    assert(kthGrammar(n = 5, k = 5) == 1)
   }
 
+  /*
+  0                 2^0
+  01                2^1
+  0110              2^2
+  01101001          2^3
+  0110100110010110  2^4
+
+   */
   def kthGrammar(n: Int, k: Int): Int = {
+    @scala.annotation.tailrec
+    def loop(i: Int, j: Int, assumedEle: Int): Int = {
+      if (i == 0) assumedEle
+      else {
+        val newAssumedEle =
+          if (j % 2 == 0) assumedEle
+          else if (assumedEle == 0) 1
+          else 0
+
+        loop(i - 1, j / 2, newAssumedEle)
+      }
+    }
+
+    if (n == 1 && k == 1) 0
+    else {
+      val actual = loop((n - 1) - 1, (k - 1) / 2, 0)
+      if (actual == 0) {
+        if ((k - 1) % 2 == 0) 0 else 1
+      } else {
+        if ((k - 1) % 2 == 0) 1 else 0
+      }
+    }
+  }
+
+  def kthGrammar_MemoryExceeds(n: Int, k: Int): Int = {
     @scala.annotation.tailrec
     def loop(i: Int, acc: String): String = {
       if (i >= (n - 1)) acc
@@ -37,7 +138,7 @@ object Recursion extends App {
     loop(0, "0")(k - 1).asDigit
   }
 
-  def kthGrammar_MemoryExceeds(n: Int, k: Int): Int = {
+  def kthGrammar_MemoryExceeds_InTailRec(n: Int, k: Int): Int = {
     @scala.annotation.tailrec
     def loop(i: Int, acc: String): String = {
       if (i >= (n - 1)) acc
