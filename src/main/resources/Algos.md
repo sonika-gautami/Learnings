@@ -1,0 +1,7 @@
+- Breadth-First Search  
+- Depth-First Search  
+- Dynamic Programming, 
+- Backtracking, 
+- Recursion, 
+- Greedy algorithms,
+- Divide & Conquer.
