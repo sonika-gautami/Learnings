@@ -89,6 +89,7 @@ object BTree extends App {
           loop(t.right)
       } else ""
     }
+
     loop(root)
 
     /*var acc = ""
@@ -280,15 +281,18 @@ object BTree extends App {
 
   def buildTreePreIn(preorder: Array[Int], inorder: Array[Int]): TreeNode = {
 
-    def loop(s: Int, e: Int, sP: Int, eP: Int): TreeNode = {
-      val root = preorder(sP)
+    def loop(start: Int, end: Int, startOfPre: Int, endOfPre: Int): TreeNode = {
+      val root = preorder(startOfPre)
 
-      var splitAt = s
+      var splitAt = start
       while (root != inorder(splitAt)) splitAt = splitAt + 1
 
+      val lengthOfLeftNode = splitAt - 1 - start
       TreeNode(root,
-        left = if (splitAt == s) null else loop(s, splitAt - 1, sP + 1, sP + 1 + (splitAt - 1 - s)),
-        right = if (splitAt == e) null else loop(splitAt + 1, e, sP + 1 + (splitAt - 1 - s) + 1, eP)
+        left = if (splitAt == start) null else
+          loop(start, splitAt - 1, startOfPre + 1, startOfPre + 1 + lengthOfLeftNode),
+        right = if (splitAt == end) null else
+          loop(splitAt + 1, end, startOfPre + 1 + lengthOfLeftNode + 1, endOfPre)
       )
     }
 
@@ -297,17 +301,20 @@ object BTree extends App {
 
   def buildTree(inorder: Array[Int], postorder: Array[Int]): TreeNode = {
 
-    def loop(s: Int, e: Int, sP: Int, eP: Int): TreeNode = {
-      val root = postorder(eP)
+    def loop(start: Int, end: Int, startOfPost: Int, endOfPost: Int): TreeNode = {
+      val root = postorder(endOfPost)
       val splitAt = {
-        var i = s;
+        var i = start;
         while (inorder(i) != root) i = i + 1
         i
       }
 
+      val lengthOfLeftNode = splitAt - 1 - start
       TreeNode(inorder(splitAt),
-        left = if (splitAt - 1 < s) null else loop(s, splitAt - 1, sP, sP + (splitAt - 1 - s)),
-        right = if (splitAt + 1 > e) null else loop(splitAt + 1, e, sP + (splitAt - 1 - s) + 1, eP - 1))
+        left = if (splitAt - 1 < start) null else
+          loop(start, splitAt - 1, startOfPost, startOfPost + lengthOfLeftNode),
+        right = if (splitAt + 1 > end) null else
+          loop(splitAt + 1, end, startOfPost + lengthOfLeftNode + 1, endOfPost - 1))
     }
 
     loop(0, inorder.length - 1, 0, inorder.length - 1)
