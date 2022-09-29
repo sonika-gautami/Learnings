@@ -1,4 +1,4 @@
-package grokking._2
+package grokking
 
 object Utils {
 

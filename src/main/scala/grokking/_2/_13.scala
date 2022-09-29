@@ -1,5 +1,7 @@
 package grokking._2
 
+import grokking.Utils
+
 object _13 extends App {
 
   Utils.print(() =>

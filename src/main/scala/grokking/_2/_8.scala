@@ -1,5 +1,7 @@
 package grokking._2
 
+import grokking.Utils
+
 object _8 extends App {
   Utils.print(() =>
     maxLongest1sPostReplace(Array(0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1), k = 2),

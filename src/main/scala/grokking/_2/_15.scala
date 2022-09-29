@@ -1,5 +1,7 @@
 package grokking._2
 
+import grokking.Utils
+
 object _15 extends App {
   Utils.print(() =>
     findAllWordConcat("catfoxcat", Array("cat", "fox")).toList,
